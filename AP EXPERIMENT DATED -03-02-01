@@ -1,0 +1,177 @@
+1. AIM: 1763. Longest Nice Substring
+PROGRAM : class Solution {
+public:
+    string longestNiceSubstring(string s) {
+        if (s.length() < 2) return "";
+
+        unordered_set<char> charSet(s.begin(), s.end());
+
+        for (int i = 0; i < s.length(); i++) {
+            if (charSet.count(tolower(s[i])) && charSet.count(toupper(s[i]))) 
+                continue;
+            
+            // Split and check both parts
+            string left = longestNiceSubstring(s.substr(0, i));
+            string right = longestNiceSubstring(s.substr(i + 1));
+
+            return left.length() >= right.length() ? left : right;
+        }
+        return s; // If the whole string is nice
+    }
+};
+
+
+2. AIM: 190. Reverse Bits
+PROGRAM: #include <iostream>
+
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t result = 0;  // Initialize result as 0
+
+        for (int i = 0; i < 32; i++) { // Loop through all 32 bits
+            result = (result << 1) | (n & 1); // Shift result left and add the last bit of n
+            n >>= 1; // Shift n right to process the next bit
+        }
+        
+        return result; // Return the reversed bit integer
+    }
+};
+
+
+3. AIM: 191. Number of 1 Bits
+PROGRAM: #include <iostream>
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int count = 0; // Initialize count of 1s to 0
+
+        while (n > 0) { // Loop until all bits are processed
+            count += (n & 1); // If the last bit is 1, add to count
+            n >>= 1; // Shift n right by 1 to check the next bit
+        }
+        
+        return count; // Return total count of 1 bits
+    }
+};
+
+
+4. AIM: 53. Maximum Subarray
+PROGRAM: class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+         int max_sum = INT_MIN; 
+        int current_sum = 0;   
+        
+        for (int num : nums) {
+            current_sum += num;  
+            
+            if (current_sum > max_sum)
+                max_sum = current_sum; 
+            
+            if (current_sum < 0)
+                current_sum = 0; 
+        }
+        
+        return max_sum; 
+    }
+};
+
+5. AIM: 240. Search a 2D Matrix II
+PROGRAM: #include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int rows = matrix.size(); 
+        int cols = matrix[0].size();
+        
+        int row = 0, col = cols - 1; // Start from the top-right corner
+        
+        while (row < rows && col >= 0) {
+            if (matrix[row][col] == target) return true; // Found target
+            else if (matrix[row][col] > target) col--; // Move left
+            else row++; // Move down
+        }
+        
+        return false; // Target not found
+    }
+};
+
+6. AIM: 372. Super Pow
+PROGRAM: #include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    const int MOD = 1337;
+
+    // Function to compute (x^y) % mod using fast exponentiation
+    int modPow(int x, int y, int mod) {
+        int result = 1;
+        x %= mod; // Reduce x under mod
+
+        while (y > 0) {
+            if (y % 2 == 1) { // If y is odd, multiply result with x
+                result = (result * x) % mod;
+            }
+            x = (x * x) % mod; // Square x
+            y /= 2; // Reduce exponent
+        }
+        return result;
+    }
+
+    // Function to compute (a^b) % 1337, where b is an array
+    int superPow(int a, vector<int>& b) {
+        int result = 1;
+        for (int digit : b) {
+            result = modPow(result, 10, MOD) * modPow(a, digit, MOD) % MOD;
+        }
+        return result;
+    }
+};
+
+
+ 
+7. AIM: 932. Beautiful Array
+PROGRAM: #include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<int> beautifulArray(int n) {
+        vector<int> result = {1};  // Base case: Beautiful array for n = 1
+        
+        while (result.size() < n) {
+            vector<int> temp;
+            
+            // Generate odd values first
+            for (int num : result) {
+                if (2 * num - 1 <= n) {
+                    temp.push_back(2 * num - 1);
+                }
+            }
+
+            // Generate even values next
+            for (int num : result) {
+                if (2 * num <= n) {
+                    temp.push_back(2 * num);
+                }
+            }
+
+            result = temp;
+        }
+
+        return result;
+    }
+};
+
+
