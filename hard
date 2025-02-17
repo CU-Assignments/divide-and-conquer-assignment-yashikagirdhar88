@@ -1,0 +1,147 @@
+1. AIM:- The Skyline Problem
+Program :- #include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+        return divideAndConquer(buildings, 0, buildings.size() - 1);
+    }
+
+private:
+    
+    vector<vector<int>> divideAndConquer(vector<vector<int>>& buildings, int left, int right) {
+        if (left > right) return {};
+        if (left == right) return {{buildings[left][0], buildings[left][2]}, {buildings[left][1], 0}};
+
+        int mid = left + (right - left) / 2;
+        vector<vector<int>> leftSkyline = divideAndConquer(buildings, left, mid);
+        vector<vector<int>> rightSkyline = divideAndConquer(buildings, mid + 1, right);
+
+        return mergeSkylines(leftSkyline, rightSkyline);
+    }
+
+   
+    vector<vector<int>> mergeSkylines(vector<vector<int>>& left, vector<vector<int>>& right) {
+        vector<vector<int>> result;
+        int h1 = 0, h2 = 0, x, height;
+        int i = 0, j = 0;
+
+        while (i < left.size() && j < right.size()) {
+            if (left[i][0] < right[j][0]) {
+                x = left[i][0];
+                h1 = left[i][1];
+                i++;
+            } else if (left[i][0] > right[j][0]) {
+                x = right[j][0];
+                h2 = right[j][1];
+                j++;
+            } else {
+                x = left[i][0];
+                h1 = left[i][1];
+                h2 = right[j][1];
+                i++;
+                j++;
+            }
+
+            height = max(h1, h2);
+            if (result.empty() || result.back()[1] != height) {
+                result.push_back({x, height});
+            }
+        }
+
+       
+        while (i < left.size()) result.push_back(left[i++]);
+        while (j < right.size()) result.push_back(right[j++]);
+
+        return result;
+    }
+};
+2. AIM :- Reverse Pairs
+PROGRAM:   class Solution {
+public:
+    int reversePairs(vector<int>& nums) {
+        return mergeSort(nums, 0, nums.size() - 1);
+    }
+    
+  
+    int mergeSort(vector<int>& nums, int left, int right) {
+        if (left >= right) return 0;  
+        
+        int mid = left + (right - left) / 2;
+        
+      
+        int count = mergeSort(nums, left, mid) + mergeSort(nums, mid + 1, right);
+        
+      
+        int j = mid + 1;
+        for (int i = left; i <= mid; i++) {
+           
+            while (j <= right && nums[i] > 2LL * nums[j]) {
+                j++;
+            }
+            count += (j - (mid + 1));  
+        }
+        
+     
+        merge(nums, left, mid, right);
+        
+        return count;
+    }
+    
+
+    void merge(vector<int>& nums, int left, int mid, int right) {
+        vector<int> temp;
+        int i = left, j = mid + 1;
+        
+     
+        while (i <= mid && j <= right) {
+            if (nums[i] <= nums[j]) {
+                temp.push_back(nums[i]);
+                i++;
+            } else {
+                temp.push_back(nums[j]);
+                j++;
+            }
+        }
+        
+       
+        while (i <= mid) {
+            temp.push_back(nums[i]);
+            i++;
+        }
+        
+       
+        while (j <= right) {
+            temp.push_back(nums[j]);
+            j++;
+        }
+        
+       
+        for (int i = left; i <= right; i++) {
+            nums[i] = temp[i - left];
+        }
+    }
+};
+3. AIM: - Longest Increasing Subsequence II
+PROGRAM:- class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums, int k) {
+        // Create a dp array to store the longest subsequence length at each index
+        vector<int> dp(nums.size(), 1);  // Initially, every number is its own subsequence of length 1
+        
+        // Loop over each element in nums to build subsequences
+        for (int i = 1; i < nums.size(); i++) {
+            for (int j = 0; j < i; j++) {
+                // Check if nums[i] > nums[j] (strictly increasing) and nums[i] - nums[j] <= k
+                if (nums[i] > nums[j] && nums[i] - nums[j] <= k) {
+                    dp[i] = max(dp[i], dp[j] + 1);  
+                }
+            }
+        }
+        
+       
+        return *max_element(dp.begin(), dp.end());
+    }
+};
